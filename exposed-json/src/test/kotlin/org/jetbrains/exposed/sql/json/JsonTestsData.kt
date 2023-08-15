@@ -37,11 +37,13 @@ object JsonTestsData {
     object JsonArrays : IntIdTable("j_arrays") {
         val groups = json<UserGroup>("groups", Json.Default)
         val numbers = json<IntArray>("numbers", Json.Default)
+        val collection = json<List<Int>>("collection", Json.Default)
     }
 
     object JsonBArrays : IntIdTable("j_b_arrays") {
         val groups = jsonb<UserGroup>("groups", Json.Default)
         val numbers = jsonb<IntArray>("numbers", Json.Default)
+        val collection = jsonb<Set<Int>>("collection", Json.Default)
     }
 }
 
@@ -107,10 +109,12 @@ fun DatabaseTestsBase.withJsonArrays(
             val singleId = tester.insertAndGetId {
                 it[tester.groups] = UserGroup(listOf(User("A", "Team A")))
                 it[tester.numbers] = intArrayOf(100)
+                it[tester.collection] = emptyList()
             }
             val tripleId = tester.insertAndGetId {
                 it[tester.groups] = UserGroup(List(3) { i -> User("${'B' + i}", "Team ${'B' + i}") })
                 it[tester.numbers] = intArrayOf(3, 4, 5)
+                it[tester.collection] = listOf(1)
             }
 
             statement(tester, singleId, tripleId, testDb)
@@ -138,10 +142,12 @@ fun DatabaseTestsBase.withJsonBArrays(
             val singleId = tester.insertAndGetId {
                 it[tester.groups] = UserGroup(listOf(User("A", "Team A")))
                 it[tester.numbers] = intArrayOf(100)
+                it[tester.collection] = emptySet()
             }
             val tripleId = tester.insertAndGetId {
                 it[tester.groups] = UserGroup(List(3) { i -> User("${'B' + i}", "Team ${'B' + i}") })
                 it[tester.numbers] = intArrayOf(3, 4, 5)
+                it[tester.collection] = setOf(1)
             }
 
             statement(tester, singleId, tripleId, testDb)

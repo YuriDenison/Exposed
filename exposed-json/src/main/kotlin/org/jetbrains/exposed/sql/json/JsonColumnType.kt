@@ -53,6 +53,12 @@ open class JsonColumnType<T : Any>(
         }
         super.setParameter(stmt, index, parameterValue)
     }
+
+    override fun valueToString(value: Any?): String = when (value) {
+        //  skip custom handling of iterables from superclass
+        is Iterable<*> -> nonNullValueToString(value)
+        else -> super.valueToString(value)
+    }
 }
 
 /**
